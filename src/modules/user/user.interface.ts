@@ -15,3 +15,8 @@ export interface IUserCheckExist {
     email: boolean;
     mobileNumber: boolean;
 }
+
+export interface IUserDynamicFieldFormValues {
+    questionId: string;
+    answerId: string;
+}

@@ -3,6 +3,7 @@ import { Types, Document } from 'mongoose';
 import { IAwsS3 } from 'src/common/aws/aws.interface';
 import { RoleEntity } from 'src/modules/role/schemas/role.schema';
 import { OrganizationsEntity } from 'src/modules/organizations/schema/organizations.schema';
+import { IUserDynamicFieldFormValues } from '../user.interface';
 
 @Schema({ timestamps: true, versionKey: false })
 export class UserEntity {
@@ -87,6 +88,16 @@ export class UserEntity {
         },
     })
     photo?: IAwsS3;
+
+    @Prop({
+        required: false,
+        _id: true,
+        type: {
+            questionId: String,
+            answerId: String,
+        },
+    })
+    userDynamicFields: IUserDynamicFieldFormValues[];
 }
 
 export const UserDatabaseName = 'users';
