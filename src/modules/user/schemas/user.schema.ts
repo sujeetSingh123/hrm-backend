@@ -52,7 +52,7 @@ export class UserEntity {
         type: Types.ObjectId,
         ref: OrganizationsEntity.name,
     })
-    organizations: Types.ObjectId;
+    organizations?: Types.ObjectId;
 
     @Prop({
         required: true,
@@ -97,7 +97,7 @@ export class UserEntity {
             answerId: String,
         },
     })
-    userDynamicFields: IUserDynamicFieldFormValues[];
+    userDynamicFields?: IUserDynamicFieldFormValues[];
 }
 
 export const UserDatabaseName = 'users';

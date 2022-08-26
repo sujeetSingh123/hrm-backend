@@ -8,6 +8,7 @@ import {
     OrganizationDatabaseName,
 } from './schema/organizations.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from '../user/user.module';
 @Module({
     imports: [
         MongooseModule.forFeature(
@@ -20,6 +21,7 @@ import { MongooseModule } from '@nestjs/mongoose';
             ],
             DATABASE_CONNECTION_NAME
         ),
+        UserModule
     ],
     controllers: [],
     providers: [OrganizationsService],

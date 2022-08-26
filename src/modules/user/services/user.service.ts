@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Types } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { UserDocument, UserEntity } from '../schemas/user.schema';
@@ -247,5 +247,15 @@ export class UserService {
         data: IUserDocument
     ): Promise<UserPayloadSerialization> {
         return plainToInstance(UserPayloadSerialization, data);
+    }
+
+    async addOrganizationInUser(user: IUserDocument,organizationId:Types.ObjectId) {
+        
+        const userDetails = await this.userModel.findById(user._id);
+
+        userDetails["organizations"] = organizationId;
+
+        return await userDetails.save();
+        
     }
 }
