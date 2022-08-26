@@ -18,16 +18,22 @@ export class OrganizationsService {
         @DatabaseEntity(OrganizationsEntity.name)
         private readonly organizationModal: Model<OrganizationDocument>,
 
-        private userService:UserService
+        private userService: UserService
     ) {}
-    async create( user: IUserDocument,createOrganizationDto: CreateOrganizationDto) {
+    async create(
+        user: IUserDocument,
+        createOrganizationDto: CreateOrganizationDto
+    ) {
         const newOrganizations = new this.organizationModal({
             ...createOrganizationDto,
         });
 
         await newOrganizations.save();
 
-        await this.userService.addOrganizationInUser(user,newOrganizations._id)
+        await this.userService.addOrganizationInUser(
+            user,
+            newOrganizations._id
+        );
         return newOrganizations;
     }
 

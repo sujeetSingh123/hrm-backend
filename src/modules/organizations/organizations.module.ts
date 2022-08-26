@@ -21,7 +21,7 @@ import { UserModule } from '../user/user.module';
             ],
             DATABASE_CONNECTION_NAME
         ),
-        UserModule
+        UserModule,
     ],
     controllers: [],
     providers: [OrganizationsService],

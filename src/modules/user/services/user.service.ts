@@ -17,6 +17,7 @@ import { DatabaseEntity } from 'src/common/database/decorators/database.decorato
 import { plainToInstance } from 'class-transformer';
 import { UserPayloadSerialization } from '../serializations/user.payload.serialization';
 import { IAwsS3 } from 'src/common/aws/aws.interface';
+import { UserUpdateDynamicFieldsDto } from '../dtos/user-update-dynamic-fields.dto';
 
 @Injectable()
 export class UserService {
@@ -249,13 +250,25 @@ export class UserService {
         return plainToInstance(UserPayloadSerialization, data);
     }
 
-    async addOrganizationInUser(user: IUserDocument,organizationId:Types.ObjectId) {
-        
+    async addOrganizationInUser(
+        user: IUserDocument,
+        organizationId: Types.ObjectId
+    ) {
         const userDetails = await this.userModel.findById(user._id);
 
-        userDetails["organizations"] = organizationId;
+        userDetails['organizations'] = organizationId;
 
         return await userDetails.save();
-        
+    }
+
+    async updateUserDynamicFields(
+        user: IUserDocument,
+        dynamicFieldsDto: UserUpdateDynamicFieldsDto
+    ) {
+        const userDetails = await this.userModel.findById(user._id);
+
+        userDetails['userDynamicFields'] = dynamicFieldsDto.userDynamicFields;
+
+        return await userDetails.save();
     }
 }

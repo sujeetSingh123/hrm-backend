@@ -45,6 +45,7 @@ import { UserPayloadSerialization } from '../serializations/user.payload.seriali
 import { UserProfileSerialization } from '../serializations/user.profile.serialization';
 import { UserService } from '../services/user.service';
 import { IUserDocument } from '../user.interface';
+import { UserUpdateDynamicFieldsDto } from '../dtos/user-update-dynamic-fields.dto';
 
 @Controller({
     version: '1',
@@ -65,6 +66,19 @@ export class UserController {
     @Get('/profile')
     async profile(@GetUser() user: IUserDocument): Promise<IResponse> {
         return user;
+    }
+
+    @Response('user.updateDynamicFieldsOfCurrentUser', {
+        classSerialization: UserProfileSerialization,
+    })
+    @UserProfileGuard()
+    @AuthJwtGuard()
+    @Post('/update-dynamic-fields')
+    async updateDynamicFieldsOfCurrentUser(
+        @GetUser() user: IUserDocument,
+        @Body() body: UserUpdateDynamicFieldsDto
+    ): Promise<IResponse> {
+        return this.userService.updateUserDynamicFields(user, body);
     }
 
     @Response('user.upload')

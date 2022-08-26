@@ -29,8 +29,11 @@ export class OrganizationsController {
     @Post()
     @AuthAdminJwtGuard(ENUM_AUTH_PERMISSIONS.ORGANIZATION_CRUD)
     @Response('organizations.create')
-    create(@GetUser() user: IUserDocument,@Body() createOrganizationDto: CreateOrganizationDto) {
-        return this.organizationsService.create(user,createOrganizationDto);
+    create(
+        @GetUser() user: IUserDocument,
+        @Body() createOrganizationDto: CreateOrganizationDto
+    ) {
+        return this.organizationsService.create(user, createOrganizationDto);
     }
 
     @Put()
