@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Document } from 'mongoose';
 import { IAwsS3 } from 'src/common/aws/aws.interface';
 import { RoleEntity } from 'src/modules/role/schemas/role.schema';
+import { OrganizationsEntity } from 'src/modules/organizations/schema/organizations.schema';
 
 @Schema({ timestamps: true, versionKey: false })
 export class UserEntity {
@@ -44,6 +45,13 @@ export class UserEntity {
         ref: RoleEntity.name,
     })
     role: Types.ObjectId;
+
+    @Prop({
+        required: true,
+        type: Types.ObjectId,
+        ref: OrganizationsEntity.name,
+    })
+    organizations: Types.ObjectId;
 
     @Prop({
         required: true,
