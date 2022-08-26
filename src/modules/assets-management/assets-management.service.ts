@@ -1,26 +1,65 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAssetsManagementDto } from './dto/create-assets-management.dto';
 import { UpdateAssetsManagementDto } from './dto/update-assets-management.dto';
+import { DatabaseEntity } from 'src/common/database/decorators/database.decorator';
+import {
+    AssetsManagementsEntity,
+    AssetsManagementDocument,
+} from './schema/assets-management.schema';
+import { Model, Types } from 'mongoose';
+import { IUserDocument } from '../user/user.interface';
 
 @Injectable()
 export class AssetsManagementService {
-    create(createAssetsManagementDto: CreateAssetsManagementDto) {
-        return 'This action adds a new assetsManagement';
+    constructor(
+        @DatabaseEntity(AssetsManagementsEntity.name)
+        private readonly assetsManagementModal: Model<AssetsManagementDocument>
+    ) {}
+    create(
+        user: IUserDocument,
+        createAssetsManagementDto: CreateAssetsManagementDto
+    ) {
+        const newAssets = new this.assetsManagementModal({
+            ...createAssetsManagementDto,
+            organization: new Types.ObjectId(user.organizations),
+        });
     }
 
-    findAll() {
-        return `This action returns all assetsManagement`;
+    async findAll() {
+        return await this.assetsManagementModal.find({}).lean();
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} assetsManagement`;
+    async findAllByOrganizations(user: IUserDocument) {
+        const allAssets = await this.assetsManagementModal
+            .find({})
+            .populate({
+                path: 'organizations',
+                match: {
+                    _id: new Types.ObjectId(user._id),
+                },
+            })
+            .lean();
+
+        return allAssets;
     }
 
-    update(id: number, updateAssetsManagementDto: UpdateAssetsManagementDto) {
-        return `This action updates a #${id} assetsManagement`;
+    async findOne(id: string) {
+        return await this.assetsManagementModal.findById(id).lean();
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} assetsManagement`;
+    async update(
+        id: string,
+        updateAssetsManagementDto: UpdateAssetsManagementDto
+    ) {
+        const assets = await this.assetsManagementModal.findById(id);
+
+        assets['title'] = updateAssetsManagementDto.title || assets.title;
+        assets['details'] = updateAssetsManagementDto.details || assets.details;
+
+        return await assets.save();
+    }
+
+    async remove(id: string) {
+        return await this.assetsManagementModal.findByIdAndDelete(id);
     }
 }

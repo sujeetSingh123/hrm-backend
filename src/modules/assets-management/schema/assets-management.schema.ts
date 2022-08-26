@@ -30,7 +30,7 @@ export class AssetsManagementsEntity {
         type: Types.ObjectId,
         ref: OrganizationsEntity.name,
     })
-    organization: Types.ObjectId;
+    organizations: Types.ObjectId;
 }
 
 export const AssetsManagementDatabaseName = 'AssetsManagements';
