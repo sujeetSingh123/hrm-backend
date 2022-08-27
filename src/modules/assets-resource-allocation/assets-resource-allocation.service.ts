@@ -1,31 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAssetsResourceAllocationDto } from './dto/create-assets-resource-allocation.dto';
 import { UpdateAssetsResourceAllocationDto } from './dto/update-assets-resource-allocation.dto';
+import { DatabaseEntity } from 'src/common/database/decorators/database.decorator';
+import {
+    AssetResourceAllocationEntity,
+    AssetResourceAllocationDocument,
+} from './schema/assets-resource-allocation.schema';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class AssetsResourceAllocationService {
-    create(
+    constructor(
+        @DatabaseEntity(AssetResourceAllocationEntity.name)
+        private readonly assetResourceAllocationEntity: Model<AssetResourceAllocationDocument>
+    ) {}
+    async create(
         createAssetsResourceAllocationDto: CreateAssetsResourceAllocationDto
     ) {
-        return 'This action adds a new assetsResourceAllocation';
+        const assetResourceAllocation = new this.assetResourceAllocationEntity({
+            ...createAssetsResourceAllocationDto,
+            asset: new Types.ObjectId(createAssetsResourceAllocationDto.asset),
+            user: new Types.ObjectId(createAssetsResourceAllocationDto.user),
+        });
+
+        return assetResourceAllocation.save();
     }
 
-    findAll() {
-        return `This action returns all assetsResourceAllocation`;
+    async findAssetAllocationHistoryByAssetId(id: string) {
+        const assetsLists = await this.assetResourceAllocationEntity.find({
+            asset: new Types.ObjectId(id),
+        });
+        return assetsLists;
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} assetsResourceAllocation`;
+    async findOne(id: string) {
+        const assetsAllocationDetails =
+            await this.assetResourceAllocationEntity.findById(id);
+        return assetsAllocationDetails;
     }
 
-    update(
-        id: number,
-        updateAssetsResourceAllocationDto: UpdateAssetsResourceAllocationDto
-    ) {
-        return `This action updates a #${id} assetsResourceAllocation`;
+    async update(id: string, updateDto: UpdateAssetsResourceAllocationDto) {
+        const assetsResourceAlloc =
+            await this.assetResourceAllocationEntity.findById(id);
+        return await this.assetResourceAllocationEntity.findByIdAndUpdate(
+            id,
+            { $set: { ...assetsResourceAlloc, ...updateDto } },
+            { new: true }
+        );
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} assetsResourceAllocation`;
+    async remove(id: string) {
+        const deletedAssetsAllocated =
+            await this.assetResourceAllocationEntity.findByIdAndDelete(id);
+        return deletedAssetsAllocated;
     }
 }

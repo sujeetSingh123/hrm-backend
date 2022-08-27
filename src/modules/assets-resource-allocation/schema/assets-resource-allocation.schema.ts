@@ -10,15 +10,6 @@ import { ASSETS_STATUS } from '../assets-resource-allocation.interface';
 export class AssetResourceAllocationEntity {
     @Prop({
         required: true,
-        index: true,
-        uppercase: true,
-        unique: false,
-        trim: true,
-    })
-    title: string;
-
-    @Prop({
-        required: true,
         type: Types.ObjectId,
         ref: AssetsManagementsEntity.name,
     })
@@ -34,12 +25,14 @@ export class AssetResourceAllocationEntity {
     @Prop({
         required: true,
         enum: ASSETS_STATUS,
+        default: ASSETS_STATUS.PENDING,
     })
     status: ASSETS_STATUS;
 
     @Prop({
         required: true,
         type: Date,
+        default: new Date(),
     })
     acquiredDate: Date;
 
