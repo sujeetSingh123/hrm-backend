@@ -17,7 +17,7 @@ export class UserLeaveReportEntity {
         unique: false,
         trim: true,
     })
-    title: string;
+    descriptions: string;
 
     @Prop({
         required: true,
@@ -27,7 +27,7 @@ export class UserLeaveReportEntity {
     user: Types.ObjectId;
 
     @Prop({
-        required: true,
+        required: false,
         type: Types.ObjectId,
         ref: UserEntity.name,
     })
